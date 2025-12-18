@@ -34,7 +34,7 @@ class TestIntelligentOffice(unittest.TestCase):
         self.assertRaises(IntelligentOfficeError, office.check_quadrant_occupancy, 16)
 
     @patch.object(IntelligentOffice, "change_servo_angle")
-    @patch.object(SDL_DS3231, 'read_datetime', new_callable=PropertyMock)
+    @patch.object(SDL_DS3231, 'read_datetime')
     def test_manage_blinds_based_on_time_in_range(self, mock_datetime: Mock, mock_servo_angle: Mock):
         office = IntelligentOffice()
         office.blinds_open = False
