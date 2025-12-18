@@ -28,3 +28,4 @@ class TestIntelligentOffice(unittest.TestCase):
     def test_check_quadrant_occupancy_out_range_11_15(self):
         office = IntelligentOffice()
         self.assertRaises(IntelligentOfficeError, office.check_quadrant_occupancy, 14)
+
