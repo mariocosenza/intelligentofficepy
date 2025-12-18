@@ -21,6 +21,10 @@ class TestIntelligentOffice(unittest.TestCase):
     def test_check_quadrant_occupancy_in_range_11_15_not_14_free(self, mock_input: Mock):
         office = IntelligentOffice()
         mock_input.return_value = False
-        occupied = office.check_quadrant_occupancy(IntelligentOffice.INFRARED_PIN1)
-        mock_input.assert_called_once_with(IntelligentOffice.INFRARED_PIN1)
+        occupied = office.check_quadrant_occupancy(IntelligentOffice.INFRARED_PIN3)
+        mock_input.assert_called_once_with(IntelligentOffice.INFRARED_PIN3)
         self.assertFalse(occupied)
+
+    def test_check_quadrant_occupancy_out_range_11_15(self):
+        office = IntelligentOffice()
+        self.assertRaises(IntelligentOfficeError, office.check_quadrant_occupancy, 14)
