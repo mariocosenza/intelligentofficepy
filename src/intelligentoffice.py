@@ -59,7 +59,11 @@ class IntelligentOffice:
         return GPIO.input(pin)
 
     def manage_blinds_based_on_time(self) -> None:
-        if self.rtc.read_datetime().hour >= 8:
+        date = self.rtc.read_datetime()
+        if date.weekday() == 5 or date.weekday() == 6:
+            self.change_servo_angle(2)
+            self.blinds_open = False
+        elif self.rtc.read_datetime().hour >= 8:
             self.change_servo_angle(12)
             self.blinds_open = True
 
