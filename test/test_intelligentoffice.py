@@ -10,6 +10,9 @@ from src.intelligentoffice import IntelligentOffice, IntelligentOfficeError
 class TestIntelligentOffice(unittest.TestCase):
 
     @patch.object(GPIO, "input")
-    def test_something(self, mock_object: Mock):
-        # This is an example of test where I want to mock the GPIO.input() function
-        pass
+    def test_check_quadrant_occupancy_in_range_11_15_not_14_occupied(self, mock_input: Mock):
+        office = IntelligentOffice()
+        mock_input.return_value = True
+        occupied = office.check_quadrant_occupancy(IntelligentOffice.INFRARED_PIN1)
+        mock_input.assert_called_once_with(IntelligentOffice.INFRARED_PIN1)
+        self.assertTrue(occupied)
