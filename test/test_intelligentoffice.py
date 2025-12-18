@@ -80,7 +80,7 @@ class TestIntelligentOffice(unittest.TestCase):
     @patch.object(GPIO, 'output')
     def test_manage_light_level_higher_than_550(self, mock_output: Mock, lux: Mock, mock_input: Mock):
         office = IntelligentOffice()
-        mock_input.side_effect = [True, False, False, False]
+        mock_input.side_effect = [True, True, False, False]
         lux.return_value = 551
         office.light_on = True
         office.manage_light_level()
@@ -91,7 +91,7 @@ class TestIntelligentOffice(unittest.TestCase):
     @patch.object(VEML7700, 'lux', new_callable=PropertyMock)
     def test_manage_light_level_in_range_500_to_550(self, lux: Mock, mock_input: Mock):
         office = IntelligentOffice()
-        mock_input.side_effect = [True, False, False, False]
+        mock_input.side_effect = [True, True, True, False]
         lux.return_value = 525
         office.light_on = True
         office.manage_light_level()
