@@ -40,6 +40,16 @@ class TestIntelligentOffice(unittest.TestCase):
         office.blinds_open = False
         mock_datetime.return_value = datetime(day=18, month=12, year=2025, hour=8, minute=0)
         office.manage_blinds_based_on_time()
-        mock_servo_angle.assert_called_once_with(2)
+        mock_servo_angle.assert_called_once_with(12)
         self.assertTrue(office.blinds_open)
+
+    @patch.object(IntelligentOffice, "change_servo_angle")
+    @patch.object(SDL_DS3231, 'read_datetime')
+    def test_manage_blinds_based_on_time_in_range_but_saturday(self, mock_datetime: Mock, mock_servo_angle: Mock):
+        office = IntelligentOffice()
+        office.blinds_open = True
+        mock_datetime.return_value = datetime(day=14, month=12, year=2025, hour=8, minute=0)
+        office.manage_blinds_based_on_time()
+        mock_servo_angle.assert_called_once_with(2)
+        self.assertFalse(office.blinds_open)
 
