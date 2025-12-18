@@ -87,6 +87,9 @@ class IntelligentOffice:
         if not GPIO.input(IntelligentOffice.GAS_PIN):
             GPIO.output(self.BUZZER_PIN, GPIO.HIGH)
             self.buzzer_on = True
+        else:
+            GPIO.output(self.BUZZER_PIN, GPIO.LOW)
+            self.buzzer_on = False
 
     def change_servo_angle(self, duty_cycle):
         """
