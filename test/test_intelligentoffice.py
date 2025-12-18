@@ -114,7 +114,19 @@ class TestIntelligentOffice(unittest.TestCase):
     def test_monitor_air_quality_detected(self, mock_input: Mock, mock_output: Mock):
         office = IntelligentOffice()
         mock_input.return_value = False
+        office.buzzer_on = False
         office.monitor_air_quality()
         mock_input.assert_called_once_with(IntelligentOffice.GAS_PIN)
         mock_output.assert_called_once_with(IntelligentOffice.BUZZER_PIN, GPIO.HIGH)
         self.assertTrue(office.buzzer_on)
+
+    @patch.object(GPIO, 'output')
+    @patch.object(GPIO, 'input')
+    def test_monitor_air_quality_not_detected(self, mock_input: Mock, mock_output: Mock):
+        office = IntelligentOffice()
+        mock_input.return_value = True
+        office.buzzer_on = True
+        office.monitor_air_quality()
+        mock_input.assert_called_once_with(IntelligentOffice.GAS_PIN)
+        mock_output.assert_called_once_with(IntelligentOffice.BUZZER_PIN, GPIO.LOW)
+        self.assertFalse(office.buzzer_on)
