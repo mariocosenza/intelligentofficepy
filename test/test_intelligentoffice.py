@@ -63,34 +63,48 @@ class TestIntelligentOffice(unittest.TestCase):
         mock_servo_angle.assert_called_once_with(2)
         self.assertFalse(office.blinds_open)
 
-
+    @patch.object(GPIO, 'input')
     @patch.object(VEML7700, 'lux', new_callable=PropertyMock)
     @patch.object(GPIO, 'output')
-    def test_manage_light_level_lower_than_500(self, mock_output: Mock, lux: Mock):
+    def test_manage_light_level_lower_than_500(self, mock_output: Mock, lux: Mock, mock_input: Mock):
         office = IntelligentOffice()
+        mock_input.side_effect = [True, False, False, False]
         lux.return_value = 499
         office.light_on = False
         office.manage_light_level()
         mock_output.assert_called_once_with(IntelligentOffice.LED_PIN, GPIO.HIGH)
         self.assertTrue(office.light_on)
 
-
+    @patch.object(GPIO, 'input')
     @patch.object(VEML7700, 'lux', new_callable=PropertyMock)
     @patch.object(GPIO, 'output')
-    def test_manage_light_level_higher_than_550(self, mock_output: Mock, lux: Mock):
+    def test_manage_light_level_higher_than_550(self, mock_output: Mock, lux: Mock, mock_input: Mock):
         office = IntelligentOffice()
+        mock_input.side_effect = [True, False, False, False]
         lux.return_value = 551
         office.light_on = True
         office.manage_light_level()
         mock_output.assert_called_once_with(IntelligentOffice.LED_PIN, GPIO.LOW)
         self.assertFalse(office.light_on)
 
-
+    @patch.object(GPIO, 'input')
     @patch.object(VEML7700, 'lux', new_callable=PropertyMock)
-    @patch.object(GPIO, 'output')
-    def test_manage_light_level_in_range_500_to_550(self, mock_output: Mock, lux: Mock):
+    def test_manage_light_level_in_range_500_to_550(self, lux: Mock, mock_input: Mock):
         office = IntelligentOffice()
+        mock_input.side_effect = [True, False, False, False]
         lux.return_value = 525
         office.light_on = True
         office.manage_light_level()
         self.assertTrue(office.light_on)
+
+    @patch.object(VEML7700, 'lux', new_callable=PropertyMock)
+    @patch.object(GPIO, 'output')
+    @patch.object(GPIO, 'input')
+    def test_manage_light_level_499_not_occupied(self, mock_input: Mock, mock_output: Mock, lux: Mock):
+        office = IntelligentOffice()
+        mock_input.side_effect = [False, False, False, False]
+        lux.return_value = 499
+        office.light_on = True
+        office.manage_light_level()
+        mock_output.assert_called_once_with(IntelligentOffice.LED_PIN, GPIO.LOW)
+        self.assertFalse(office.light_on)
